@@ -26,16 +26,42 @@
             this._super(x, y);
         },
 
-        tick: function () {
+        tick: function (engine) {
 
-            this.x += Math.sin(Date.now() / 1000);
+            /*this.x += Math.sin(Date.now() / 1000);
 
             if (Ω.input.released("left") || Ω.input.released("right")) {
                 this.rthrust = 0;
             }
             if (Ω.input.released("up") || Ω.input.released("down")) {
                 this.thrust = 0;
+            }*/
+
+            var xf = this.p.force.x,
+                yf = this.p.force.y,
+                px = -engine.world.gravity.y,
+                py = engine.world.gravity.x;
+
+            if (Ω.input.pressed("up")) {
+                xf -= (engine.world.gravity.x) * 0.05;
+                yf -= (engine.world.gravity.y) * 0.05;
             }
+
+            if (Ω.input.isDown("left")) {
+                if(this.p.speed < 5) {
+                    xf += px * 0.005;
+                    yf += py * 0.005;
+                }
+            }
+            if (Ω.input.isDown("right")) {
+                if(this.p.speed < 5) {
+                    xf += -px * 0.005;
+                    yf += -py * 0.005;
+                }
+            }
+
+            this.p.force.x = xf;
+            this.p.force.y = yf;
 
             return true;
 

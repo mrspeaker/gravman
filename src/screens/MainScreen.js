@@ -4,7 +4,7 @@
 
     var MainScreen = Ω.Screen.extend({
 
-        gravity: Math.PI * 0.5,
+        gravity: Math.PI * 1.5,
 
         init: function () {
 
@@ -33,7 +33,7 @@
             var self = this;
             Matter.Events.on(engine, "collisionStart", function (col) {
                 col.pairs.forEach(function (o) {
-                    if (o.bodyA === self.p || o.bodyB === self.p) {
+                    if (o.bodyA === self.p || o.bodyB === self.player.p) {
                         self.gravity = Math.atan2(-o.collision.normal.y, o.collision.normal.x);
                         self.gravity = self.gravity < 0 ? self.gravity += 2 * Math.PI : self.gravity;
                         self.syncGravity();
@@ -46,7 +46,7 @@
 
         initMatter: function (engine) {
 
-            var p = this.p = Matter.Bodies.polygon(100, 100, 6, 25);
+            var p = this.player.p = Matter.Bodies.polygon(this.player.x, this.player.y, 6, 25);
 
         
             Matter.World.clear(engine.world);
@@ -65,13 +65,12 @@
             World.addBody(_world, Bodies.rectangle(-offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
 
 
-            var lol = Bodies.rectangle(200, 200, 220, 20, { isStatic: true });
-            Matter.Body.rotate(lol, Math.PI / 4);
+            var a1 = Bodies.rectangle(80, _sceneHeight - 80, 240, 20, { isStatic: true });
+            Matter.Body.rotate(a1, Math.PI / 4);
+            World.addBody(_world, a1);
 
-            World.addBody(_world, lol);
-
-            //engine.world.bounds.max.x = 500;
-            //engine.world.bounds.max.y = 350;
+            World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.38, _sceneHeight - 140, 250, 20, { isStatic: true }));
+            World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.6, _sceneHeight * 0.5, 250, 20, { isStatic: true }));
 
             var renderOptions = engine.render.options;
             renderOptions.wireframes = true;
@@ -97,38 +96,7 @@
         },
 
         tick: function () {
-            this.player.tick();
-
-            if (Math.random() < 0.01) {
-                //this.gravity = Math.random() * (Math.PI * 2);
-                //this.syncGravity();
-            }
-
-            var xf = this.p.force.x,
-                yf = this.p.force.y,
-                px = -this.engine.world.gravity.y,
-                py = this.engine.world.gravity.x;
-
-            if (Ω.input.pressed("up")) {
-                xf -= (this.engine.world.gravity.x) / 20;
-                yf -= (this.engine.world.gravity.y) / 20;
-            }
-
-            if (Ω.input.isDown("left")) {
-                if(this.p.speed < 5) {
-                    xf += px * 0.005;
-                    yf += py * 0.005;
-                }
-            }
-            if (Ω.input.isDown("right")) {
-                if(this.p.speed < 5) {
-                    xf += -px * 0.005;
-                    yf += -py * 0.005;
-                }
-            }
-
-            this.p.force.x = xf;
-            this.p.force.y = yf;
+            this.player.tick(this.engine);
         },
 
         render: function (gfx) {
