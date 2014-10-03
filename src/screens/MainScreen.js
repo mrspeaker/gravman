@@ -4,6 +4,8 @@
 
     var MainScreen = Ω.Screen.extend({
 
+        gravity: Math.PI * 0.5,
+
         init: function () {
 
             this.player = new Player(100, 100);
@@ -91,22 +93,49 @@
             renderOptions.showIds = false;
             renderOptions.showShadows = false;
             renderOptions.background = '#fff';
+
+            this.syncGravity();
+        },
+
+        syncGravity: function () {
+            this.engine.world.gravity.x = Math.cos(this.gravity);
+            this.engine.world.gravity.y = -Math.sin(this.gravity);
         },
 
         tick: function () {
             this.player.tick();
 
             if (Math.random() < 0.01) {
-                this.engine.world.gravity.y = Math.sin(Date.now() / 2800);
-                this.engine.world.gravity.x = Math.cos(Date.now() / 3300);
+                //this.gravity = Math.random() * (Math.PI * 2);
+                this.syncGravity();
             }
 
-            if (Ω.input.pressed("space")) {
-                this.p.force = {
-                    x: -(this.engine.world.gravity.x) / 20,
-                    y: -(this.engine.world.gravity.y) / 20
-                };
+            var xf = this.p.force.x,
+                yf = this.p.force.y,
+                perp = this.gravity + (Math.PI / 2),
+                px = Math.cos(perp),
+                py = Math.sin(perp);
+
+            if (Ω.input.pressed("up")) {
+                xf -= (this.engine.world.gravity.x) / 20;
+                yf -= (this.engine.world.gravity.y) / 20;
             }
+
+            if (Ω.input.isDown("left")) {
+                if(this.p.speed < 5) {
+                    xf -= px * 0.005;
+                    yf -= py * 0.005;
+                }
+            }
+            if (Ω.input.isDown("right")) {
+                if(this.p.speed < 5) {
+                    xf += px * 0.005;
+                    yf += py * 0.005;
+                }
+            }
+
+            this.p.force.x = xf;
+            this.p.force.y = yf;
         },
 
         render: function (gfx) {
