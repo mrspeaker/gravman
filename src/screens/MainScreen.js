@@ -30,33 +30,20 @@
                 game.render(Ω.gfx);
             });
 
+            var self = this;
+            Matter.Events.on(engine, "collisionStart", function (col) {
+                col.pairs.forEach(function (o) {
+                    if (o.bodyA === self.p || o.bodyB === self.p) {
+                        self.gravity = Math.atan2(-o.collision.normal.y, o.collision.normal.x);
+                        self.syncGravity();
+                    }
+                });
+            });
+
             this.initMatter(engine);
         },
 
         initMatter: function (engine) {
-
-            /*var stack = Matter.Composites.stack(20, 20, 15, 4, 0, 0, function(x, y, column, row) {
-                var sides = Math.round(Matter.Common.random(1, 8));
-                sides = (sides === 3) ? 4 : sides; // Triangles == unstable
-                // round the edges of some bodies
-                var chamfer = null;
-                if (sides > 2 && Matter.Common.random() > 0.7) {
-                    chamfer = {
-                        radius: 10
-                    };
-                }
-                switch (Math.round(Matter.Common.random(0, 1))) {
-                case 0:
-                    if (Matter.Common.random() < 0.8) {
-                        return Matter.Bodies.rectangle(x, y, Matter.Common.random(25, 40), Matter.Common.random(25, 50), { chamfer: chamfer });
-                    } else {
-                        return Matter.Bodies.rectangle(x, y, Matter.Common.random(80, 110), Matter.Common.random(25, 30), { chamfer: chamfer });
-                    }
-                    break;
-                case 1:
-                    return Matter.Bodies.polygon(x, y, sides, Matter.Common.random(25, 50), { chamfer: chamfer });
-                }
-            });*/
 
             var p = this.p = Matter.Bodies.polygon(100, 100, 6, 25);
 
@@ -76,6 +63,12 @@
             World.addBody(_world, Bodies.rectangle(_sceneWidth + offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
             World.addBody(_world, Bodies.rectangle(-offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
 
+
+            var lol = Bodies.rectangle(200, 200, 220, 20, { isStatic: true });
+            Matter.Body.rotate(lol, Math.PI / 4);
+
+            World.addBody(_world, lol);
+
             //engine.world.bounds.max.x = 500;
             //engine.world.bounds.max.y = 350;
 
@@ -86,7 +79,7 @@
             renderOptions.showBroadphase = false;
             renderOptions.showBounds = false;
             renderOptions.showVelocity = false;
-            renderOptions.showCollisions = false;
+            renderOptions.showCollisions = true;
             renderOptions.showAxes = false;
             renderOptions.showPositions = false;
             renderOptions.showAngleIndicator = true;
@@ -107,7 +100,7 @@
 
             if (Math.random() < 0.01) {
                 //this.gravity = Math.random() * (Math.PI * 2);
-                this.syncGravity();
+                //this.syncGravity();
             }
 
             var xf = this.p.force.x,
