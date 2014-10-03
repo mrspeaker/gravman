@@ -35,6 +35,7 @@
                 col.pairs.forEach(function (o) {
                     if (o.bodyA === self.p || o.bodyB === self.p) {
                         self.gravity = Math.atan2(-o.collision.normal.y, o.collision.normal.x);
+                        self.gravity = self.gravity < 0 ? self.gravity += 2 * Math.PI : self.gravity;
                         self.syncGravity();
                     }
                 });
@@ -105,9 +106,8 @@
 
             var xf = this.p.force.x,
                 yf = this.p.force.y,
-                perp = this.gravity + (Math.PI / 2),
-                px = Math.cos(perp),
-                py = Math.sin(perp);
+                px = -this.engine.world.gravity.y,
+                py = this.engine.world.gravity.x;
 
             if (Ω.input.pressed("up")) {
                 xf -= (this.engine.world.gravity.x) / 20;
@@ -116,14 +116,14 @@
 
             if (Ω.input.isDown("left")) {
                 if(this.p.speed < 5) {
-                    xf -= px * 0.005;
-                    yf -= py * 0.005;
+                    xf += px * 0.005;
+                    yf += py * 0.005;
                 }
             }
             if (Ω.input.isDown("right")) {
                 if(this.p.speed < 5) {
-                    xf += px * 0.005;
-                    yf += py * 0.005;
+                    xf += -px * 0.005;
+                    yf += -py * 0.005;
                 }
             }
 
