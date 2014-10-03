@@ -8,7 +8,7 @@
 
         init: function () {
 
-            this.player = new Player(100, 100);
+            this.player = new Player(100, 100, this);
 
             this.Engine = Matter.Engine;
             this.World = Matter.World;
@@ -18,9 +18,16 @@
             var engine = this.engine = Matter.Engine.create(
                 document.getElementById('phys'), 
                 {
+
                    /* positionIterations: 6,
                     velocityIterations: 4,
                     enableSleeping: false*/
+                    render: {
+                        options: {
+                            width: Ω.env.w,
+                            height: Ω.env.h
+                        }
+                    }
                 });
 
             Matter.Engine.run(engine);
@@ -33,8 +40,8 @@
             var self = this;
             Matter.Events.on(engine, "collisionStart", function (col) {
                 col.pairs.forEach(function (o) {
-                    if (o.bodyA === self.p || o.bodyB === self.player.p) {
-                        self.gravity = Math.atan2(-o.collision.normal.y, o.collision.normal.x);
+                    if (o.bodyA === self.player.p || o.bodyB === self.player.p) {
+                        self.gravity = Math.atan2(o.collision.normal.y, o.collision.normal.x);
                         self.gravity = self.gravity < 0 ? self.gravity += 2 * Math.PI : self.gravity;
                         self.syncGravity();
                     }
@@ -54,8 +61,8 @@
             Matter.World.add(engine.world, p);
 
             var World = Matter.World,
-                _sceneWidth = 800,
-                _sceneHeight = 600,
+                _sceneWidth = Ω.env.w,
+                _sceneHeight = Ω.env.h,
                 Bodies = Matter.Bodies,
                 _world = engine.world,
                 offset = 5;
@@ -85,14 +92,15 @@
             renderOptions.showAngleIndicator = true;
             renderOptions.showIds = false;
             renderOptions.showShadows = false;
-            renderOptions.background = '#fff';
+            renderOptions.background = 'rgba(0,0,0,0)';
+            renderOptions.wireframeBackground = 'rgba(0,0,0,0)';
 
             this.syncGravity();
         },
 
         syncGravity: function () {
             this.engine.world.gravity.x = Math.cos(this.gravity);
-            this.engine.world.gravity.y = -Math.sin(this.gravity);
+            this.engine.world.gravity.y = Math.sin(this.gravity);
         },
 
         tick: function () {
