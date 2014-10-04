@@ -31,24 +31,28 @@
 
             var xf = this.p.force.x,
                 yf = this.p.force.y,
+                // 90 degrees to gravity
                 px = -engine.world.gravity.y,
-                py = engine.world.gravity.x;
+                py = engine.world.gravity.x,
+                leftRightPow = 0.005,
+                jumpPow = 0.05,
+                speedMax = 5;
 
             if (Ω.input.pressed("up")) {
-                xf -= (engine.world.gravity.x) * 0.05;
-                yf -= (engine.world.gravity.y) * 0.05;
+                xf -= (engine.world.gravity.x) * jumpPow;
+                yf -= (engine.world.gravity.y) * jumpPow;
             }
 
             if (Ω.input.isDown("left")) {
-                if(this.p.speed < 5) {
-                    xf += px * 0.005;
-                    yf += py * 0.005;
+                if(this.p.speed < speedMax) {
+                    xf += px * leftRightPow;
+                    yf += py * leftRightPow;
                 }
             }
             if (Ω.input.isDown("right")) {
-                if(this.p.speed < 5) {
-                    xf += -px * 0.005;
-                    yf += -py * 0.005;
+                if(this.p.speed < speedMax) {
+                    xf += -px * leftRightPow;
+                    yf += -py * leftRightPow;
                 }
             }
 
@@ -62,7 +66,6 @@
 
         },
 
-        
         render: function (gfx) {
 
             var c = gfx.ctx,
