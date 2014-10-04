@@ -162,13 +162,24 @@
         tick: function () {
 
             if (this.initGamepad() || this.gamepad) {
-                if (!Ω.input.isDown("up") && navigator.getGamepads()[0].buttons[0].pressed) {
-                    console.log(navigator.getGamepads()[0].buttons[0])
+                var gp = navigator.getGamepads()[0];
+                if (!Ω.input.isDown("up") && gp.buttons[0].pressed) {
                     Ω.input.trigger("up");
-                } else if (Ω.input.isDown("up") && !(navigator.getGamepads()[0].buttons[0].pressed) ) {
+                } else if (Ω.input.isDown("up") && !(gp.buttons[0].pressed) ) {
                     Ω.input.release("up");
                 }
 
+                if (!Ω.input.isDown("left") && gp.axes[0] < -0.5) {
+                    Ω.input.trigger("left");
+                } else if (Ω.input.isDown("left") && gp.axes[0] > -0.5) {
+                    Ω.input.release("left");
+                }
+
+                if (!Ω.input.isDown("right") && gp.axes[0] > 0.5) {
+                    Ω.input.trigger("right");
+                } else if (Ω.input.isDown("right") && gp.axes[0] < 0.5) {
+                    Ω.input.release("right");
+                }
             }
 
             this.player.tick(this.engine);
