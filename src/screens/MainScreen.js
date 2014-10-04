@@ -6,6 +6,8 @@
 
         gravity: Math.PI * 0.5,
 
+        gamepadFound: false,
+
         init: function () {
 
             this.player = new Player(100, 100, this);
@@ -22,7 +24,6 @@
                     y: Ω.utils.rand(Ω.env.h)
                 })
             }
-
 
             var engine = this.engine = Matter.Engine.create(
                 document.getElementById('phys'), 
@@ -75,6 +76,16 @@
             this.initMatter(engine);
         },
 
+        initGamepad: function () {
+
+            if (this.gamepad || !navigator.getGamepads() || !(navigator.getGamepads()[0])) return false;
+
+            this.gamepad = navigator.getGamepads()[0];
+
+            return true;
+
+        },
+
         initMatter: function (engine) {
 
             var p = this.player.p = Matter.Bodies.polygon(this.player.x, this.player.y, 6, 25);
@@ -94,13 +105,21 @@
             World.addBody(_world, Bodies.rectangle(_sceneWidth + offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
             World.addBody(_world, Bodies.rectangle(-offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
 
-            
-            World.addBody(_world, Bodies.polygon(_sceneWidth * 0.5, _sceneWidth * 0.5, 6, 25));
-            World.addBody(_world, Bodies.circle(_sceneWidth * 0.5, _sceneWidth * 0.1, 23));
+            //World.addBody(_world, Bodies.circle(300, 300, 130, { isStatic: true }));
 
-            var a1 = Bodies.rectangle(80, _sceneHeight - 80, 240, 20, { isStatic: true });
-            Matter.Body.rotate(a1, Math.PI / 4);
-            World.addBody(_world, a1);
+            
+            var polyman = Bodies.polygon(_sceneWidth * 0.5, _sceneWidth * 0.5, 6, 25),
+                circleman = Bodies.circle(_sceneWidth * 0.5, _sceneWidth * 0.1, 23),
+                angle1 = Bodies.rectangle(80, _sceneHeight - 80, 240, 20, { isStatic: true });
+            
+            //circleman.frictionAir = 0.01;
+            //polyman.frictionAir = 0.00001;
+
+            Matter.Body.rotate(angle1, Math.PI / 4);
+            
+            [polyman, circleman, angle1].map(function (b) {
+                World.addBody(_world, b);
+            });
 
             for (var i = 0; i < 11; i++) {
                 World.addBody(_world, 
@@ -141,6 +160,17 @@
         },
 
         tick: function () {
+
+            if (this.initGamepad() || this.gamepad) {
+                if (!Ω.input.isDown("up") && navigator.getGamepads()[0].buttons[0].pressed) {
+                    console.log(navigator.getGamepads()[0].buttons[0])
+                    Ω.input.trigger("up");
+                } else if (Ω.input.isDown("up") && !(navigator.getGamepads()[0].buttons[0].pressed) ) {
+                    Ω.input.release("up");
+                }
+
+            }
+
             this.player.tick(this.engine);
 
             var gravity = this.gravity,
@@ -160,6 +190,7 @@
 
             this.xo = xo;
             this.yo = yo;
+
         },
 
         render: function (gfx) {
