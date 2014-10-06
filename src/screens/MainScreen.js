@@ -57,7 +57,8 @@
                 p = this.player;
             Matter.Events.on(engine, "collisionStart", function (col) {
                 col.pairs.forEach(function (o) {
-                    if (o.bodyA === p.p || o.bodyB === p.p) {
+                    if (o.bodyB === p.p) {//} || o.bodyA === p.p) {
+                        //console.log(o.collision.normal, o.collision.tangent)
                         self.gravity = Math.atan2(o.collision.normal.y, o.collision.normal.x);
                         self.gravity = self.gravity < 0 ? self.gravity += 2 * Math.PI : self.gravity;
                         self.syncGravity();
@@ -118,7 +119,7 @@
             Matter.Body.rotate(angle1, Math.PI / 4);
             
             [polyman, circleman, angle1].map(function (b) {
-                World.addBody(_world, b);
+            //    World.addBody(_world, b);
             });
 
             for (var i = 0; i < 11; i++) {
@@ -150,6 +151,7 @@
             renderOptions.showShadows = false;
             renderOptions.background = 'rgba(0,0,0,0)';
             renderOptions.wireframeBackground = 'rgba(0,0,0,0)';
+            renderOptions.wireframeColor = 'rgba(0,0,0,1)';
 
             this.syncGravity();
         },
@@ -207,19 +209,17 @@
         render: function (gfx) {
             var c = gfx.ctx;
 
-            this.clear(gfx, "hsl(195, 40%, 5%)");
+            this.clear(gfx, "hsl(195, 40%, 75%)");
 
             this.player.render(gfx);
 
+            // Some rain
             c.strokeStyle = "hsl(210, 50%, 20%)";
             this.rains.forEach(function (r) {
                 c.beginPath();
                 c.moveTo(r.x, r.y);
                 c.lineTo(r.x + (this.xo * 10), r.y + (this.yo * 10));
                 c.stroke();
-                //c.fillRect(r.x, r.y, 2, 2);
-                //c.fillRect(r.x + (this.xo * 2), r.y + (this.yo * 2), 2, 2);
-                //c.fillRect(r.x + (this.xo * 4), r.y + (this.yo * 4), 2, 2);
             }, this);
 
         }

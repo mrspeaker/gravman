@@ -24,7 +24,7 @@
                 py = engine.world.gravity.x,
                 leftRightPow = 0.005,
                 jumpPow = 0.05,
-                speedMax = 5;
+                speedMax = 7;
 
             if (Ω.input.pressed("up")) {
                 xf -= (engine.world.gravity.x) * jumpPow;
