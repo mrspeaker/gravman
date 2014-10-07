@@ -10,6 +10,16 @@
 
         init: function () {
 
+            new Ω.SVGLevel("res/levels/level00.svg", "#Page-1", function (level, err) {
+                if (err) {
+                    console.log("Error loading surface:", err);
+                    return;
+                }
+
+                console.log(level);
+
+            });
+
             this.player = new Player(100, 100, this);
 
             this.Engine = Matter.Engine;
@@ -119,7 +129,7 @@
             Matter.Body.rotate(angle1, Math.PI / 4);
             
             [polyman, circleman, angle1].map(function (b) {
-            //    World.addBody(_world, b);
+                World.addBody(_world, b);
             });
 
             for (var i = 0; i < 11; i++) {
