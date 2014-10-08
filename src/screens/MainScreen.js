@@ -20,10 +20,7 @@
                     return;
                 }
 
-                self.level = {
-                    bg: level.layer("bg").data
-                };
-
+                self.level = level;
                 self.init2();
                 self.loaded = true;
             });
@@ -128,20 +125,12 @@
             //World.addBody(_world, Bodies.rectangle(_sceneWidth + offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
             //World.addBody(_world, Bodies.rectangle(-offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
 
-            //World.addBody(_world, Bodies.circle(300, 300, 130, { isStatic: true }));
-
-            
             var polyman = Bodies.polygon(_sceneWidth * 0.5, _sceneWidth * 0.5, 6, 25),
-                circleman = Bodies.circle(_sceneWidth * 0.5, _sceneWidth * 0.1, 23),
-                angle1 = Bodies.rectangle(80, _sceneHeight - 80, 240, 20, { isStatic: true });
-            
+                circleman = Bodies.circle(_sceneWidth * 0.5, _sceneWidth * 0.1, 23);           
             //circleman.frictionAir = 0.01;
             //polyman.frictionAir = 0.00001;
-
-            Matter.Body.rotate(angle1, Math.PI / 4);
-            
             [polyman, circleman].map(function (b) {
-                World.addBody(_world, b);
+             //   World.addBody(_world, b);
             });
 
             /*for (var i = 0; i < 11; i++) {
@@ -154,23 +143,33 @@
                         { isStatic: true }));
             }*/
 
-            this.level.bg.forEach(function (r) {
-                var weirdOffset = 10; // NOTE! Wierd offset is in the svg file: main container transform!
+            var level = this.level,
+                bg = level.layer("bg");
+            bg.data.forEach(function (r) {
+
                 var body = Bodies.rectangle(
-                        r.x + (r.w / 2) + weirdOffset,
-                        r.y + (r.h / 2) + weirdOffset, 
+                        r.x + (r.w / 2) - bg.x,
+                        r.y + (r.h / 2) - bg.y, 
                         r.w, 
                         r.h, 
                         { isStatic: true });
                 if (r.rot) {
-                    Matter.Body.rotate(body, r.rot * (Math.PI / 180) );
+                    Matter.Body.rotate(body, r.rot * (Math.PI / 180));
                 }
                 World.addBody(_world, body);
             }, this);
 
-            //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.38, _sceneHeight - 140, 250, 20, { isStatic: true }));
-            //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.6, _sceneHeight * 0.5, 250, 20, { isStatic: true }));
-            //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.5, 50, 100, 65, { isStatic: true }));
+            level.layer("falling").data.forEach(function (r) {
+                var body;
+                if (r.type === "polygon") {
+                    body = Bodies.polygon(r.x, r.y, r.sides, 25);
+                } else if (r.type === "rectangle") {
+                    body = Bodies.rectangle(r.x, r.y, r.w, r.h);
+                } else {
+                    console.log(r)
+                }
+                World.addBody(_world, body);
+            }, this);
 
             var renderOptions = engine.render.options;
             renderOptions.wireframes = true;
