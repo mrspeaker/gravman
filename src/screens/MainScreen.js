@@ -8,17 +8,29 @@
 
         gamepadFound: false,
 
+        loaded: false,
+
         init: function () {
 
-            new Ω.SVGLevel("res/levels/level00.svg", "#Page-1", function (level, err) {
+            var self = this;
+
+            new Ω.SVGLevel("res/levels/level00.svg?rnd=" + Date.now(), "#Page-1", function (level, err) {
                 if (err) {
                     console.log("Error loading surface:", err);
                     return;
                 }
 
-                console.log(level);
+                self.level = {
+                    bg: level.layer("bg").data
+                };
 
+                self.init2();
+                self.loaded = true;
             });
+
+        },
+
+        init2: function () {
 
             this.player = new Player(100, 100, this);
 
@@ -111,10 +123,10 @@
                 Bodies = Matter.Bodies,
                 _world = engine.world,
                 offset = 5;
-            World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.5, -offset, _sceneWidth + 0.5, 50.5, { isStatic: true }));
-            World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.5, _sceneHeight + offset, _sceneWidth + 0.5, 50.5, { isStatic: true }));
-            World.addBody(_world, Bodies.rectangle(_sceneWidth + offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
-            World.addBody(_world, Bodies.rectangle(-offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
+            //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.5, -offset, _sceneWidth + 0.5, 50.5, { isStatic: true }));
+            //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.5, _sceneHeight + offset, _sceneWidth + 0.5, 50.5, { isStatic: true }));
+            //World.addBody(_world, Bodies.rectangle(_sceneWidth + offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
+            //World.addBody(_world, Bodies.rectangle(-offset, _sceneHeight * 0.5, 50.5, _sceneHeight + 0.5, { isStatic: true }));
 
             //World.addBody(_world, Bodies.circle(300, 300, 130, { isStatic: true }));
 
@@ -128,11 +140,11 @@
 
             Matter.Body.rotate(angle1, Math.PI / 4);
             
-            [polyman, circleman, angle1].map(function (b) {
+            [polyman, circleman].map(function (b) {
                 World.addBody(_world, b);
             });
 
-            for (var i = 0; i < 11; i++) {
+            /*for (var i = 0; i < 11; i++) {
                 World.addBody(_world, 
                     Bodies.rectangle(
                         Ω.utils.rand(_sceneWidth),
@@ -140,7 +152,21 @@
                         Ω.utils.rand(30, 250), 
                         Ω.utils.rand(30, 250), 
                         { isStatic: true }));
-            }
+            }*/
+
+            this.level.bg.forEach(function (r) {
+                var weirdOffset = 10; // NOTE! Wierd offset is in the svg file: main container transform!
+                var body = Bodies.rectangle(
+                        r.x + (r.w / 2) + weirdOffset,
+                        r.y + (r.h / 2) + weirdOffset, 
+                        r.w, 
+                        r.h, 
+                        { isStatic: true });
+                if (r.rot) {
+                    Matter.Body.rotate(body, r.rot * (Math.PI / 180) );
+                }
+                World.addBody(_world, body);
+            }, this);
 
             //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.38, _sceneHeight - 140, 250, 20, { isStatic: true }));
             //World.addBody(_world, Bodies.rectangle(_sceneWidth * 0.6, _sceneHeight * 0.5, 250, 20, { isStatic: true }));

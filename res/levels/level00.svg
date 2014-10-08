@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="725px" height="371px" viewBox="0 0 725 371" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+<svg width="1180px" height="680px" viewBox="0 0 1180 680" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
     <!-- Generator: Sketch 3.1 (8751) - http://www.bohemiancoding.com/sketch -->
     <title>level00 2</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
         <g id="bg" sketch:type="MSLayerGroup" transform="translate(-10.000000, -10.000000)" stroke="#979797" fill="#D8D8D8">
-            <rect id="Rectangle-5" sketch:type="MSShapeGroup" x="270" y="321" width="60" height="60"></rect>
-            <rect id="Rectangle-6" sketch:type="MSShapeGroup" x="330" y="261" width="60" height="60"></rect>
-            <rect id="Rectangle-8" sketch:type="MSShapeGroup" x="390" y="201" width="60" height="60"></rect>
+            <rect id="Rectangle-1" sketch:type="MSShapeGroup" x="0" y="0" width="1200.17681" height="17.9142529"></rect>
+            <rect id="Rectangle-2" sketch:type="MSShapeGroup" x="0" y="682.533037" width="1200.17681" height="17.9142529"></rect>
+            <rect id="Rectangle-3" sketch:type="MSShapeGroup" x="0" y="17.9142529" width="16.1097558" height="664.618784"></rect>
+            <rect id="Rectangle-4" sketch:type="MSShapeGroup" x="1184.06705" y="17.9142529" width="16.1097558" height="664.618784"></rect>
+            <rect id="Rectangle-5" sketch:type="MSShapeGroup" x="434.963406" y="575.047519" width="96.6585347" height="107.485518"></rect>
+            <rect id="Rectangle-6" sketch:type="MSShapeGroup" x="531.621941" y="467.562002" width="96.6585347" height="107.485518"></rect>
+            <rect id="Rectangle-8" sketch:type="MSShapeGroup" x="628.280475" y="360.076484" width="96.6585347" height="107.485518"></rect>
+            <rect id="Rectangle-8" sketch:type="MSShapeGroup" transform="translate(93.500000, 604.000000) rotate(45.000000) translate(-93.500000, -604.000000) " x="-28" y="594" width="243" height="20"></rect>
+            <rect id="Rectangle-9" sketch:type="MSShapeGroup" transform="translate(1107.500000, 93.000000) rotate(45.000000) translate(-1107.500000, -93.000000) " x="986" y="83" width="243" height="20"></rect>
         </g>
-        <g id="falling" sketch:type="MSLayerGroup" transform="translate(168.000000, 92.000000)" stroke="#979797" fill="#D8D8D8">
+        <g id="falling" sketch:type="MSLayerGroup" transform="translate(893.000000, 58.000000)" stroke="#979797" fill="#D8D8D8">
             <polygon id="Polygon-1" sketch:type="MSShapeGroup" points="20.5 0 38.2535208 10.25 38.2535208 30.75 20.5 41 2.74647922 30.75 2.74647922 10.25 "></polygon>
         </g>
     </g>
