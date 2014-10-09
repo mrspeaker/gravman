@@ -72,26 +72,8 @@
                 game.render(Ω.gfx);
             });
 
-            var self = this,
-                p = this.player;
-            Matter.Events.on(engine, "collisionStart", function (col) {
-                col.pairs.forEach(function (o) {
-                    if (o.bodyB === p.p) {//} || o.bodyA === p.p) {
-                        //console.log(o.collision.normal, o.collision.tangent)
-                        self.gravity = Math.atan2(o.collision.normal.y, o.collision.normal.x);
-                        self.gravity = self.gravity < 0 ? self.gravity += 2 * Math.PI : self.gravity;
-                        self.syncGravity();
-                    }
-                });
-            });
 
-            /*Matter.Events.on(engine, "collisionEnd", function (col) {
-                ol.pairs.forEach(function (o) {
-                    if (o.bodyA === p || o.bodyB === p) {
-
-                    });
-                });
-            });*/
+            this.addPhysicsCollisionHandler(engine);
 
             this.initMatter(engine);
         },
@@ -146,12 +128,11 @@
             var level = this.level,
                 bg = level.layer("bg");
             bg.data.forEach(function (r) {
-
                 var body = Bodies.rectangle(
                         r.x + (r.w / 2) - bg.x,
                         r.y + (r.h / 2) - bg.y, 
                         r.w, 
-                        r.h, 
+                        r.h,
                         { isStatic: true });
                 if (r.rot) {
                     Matter.Body.rotate(body, r.rot * (Math.PI / 180));
@@ -189,6 +170,33 @@
             renderOptions.wireframeColor = 'rgba(0,0,0,1)';
 
             this.syncGravity();
+        },
+
+        addPhysicsCollisionHandler: function (engine) {
+
+            var self = this,
+                p = this.player;
+
+            Matter.Events.on(engine, "collisionStart", function (col) {
+                col.pairs.forEach(function (o) {
+                    if (o.bodyB === p.p || o.bodyA === p.p) {
+                        //console.log(o.collision.normal, o.collision.tangent)
+                        self.gravity = Math.atan2(o.collision.normal.y, o.collision.normal.x);
+                        self.gravity = self.gravity < 0 ? self.gravity += 2 * Math.PI : self.gravity;
+                        self.syncGravity();
+                    }
+                });
+            });
+
+            /*Matter.Events.on(engine, "collisionEnd", function (col) {
+                ol.pairs.forEach(function (o) {
+                    if (o.bodyA === p || o.bodyB === p) {
+
+                    });
+                });
+            });*/
+
+
         },
 
         syncGravity: function () {
