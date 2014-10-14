@@ -11,7 +11,7 @@
 ## fix
 
 * how left/right spped is controlled is wrong (cant jump and move)
-* very edges of platforms flip gravity
+* very edges of platforms flip gravity (normal on edte)
 
 ## add back to Ω500
 
